@@ -1,100 +1,47 @@
-# RESSL Assignment Implementation
+## RESSL Task 2 — MCP Server (Python)
 
-This repository collects deliverables for the RESSL assignment. It covers both the Salesforce setup task and the MCP keyword search server.
-
-## Task 1 – Salesforce Setup
-
-Complete these steps in your Salesforce Developer Edition environment:
-
-1. Sign up for a free [Salesforce Developer Edition](https://developer.salesforce.com/signup) account.
-2. Create a custom object (e.g., `Project__c`) with at least one custom field.
-3. Add the custom object as a tab so it is visible in the Salesforce UI.
-4. Create a sample record for the new custom object.
-5. Capture a screenshot showing the record detail page. Attach that screenshot to your submission document.
-
-> **Note:** The automation in this repository does not interact with Salesforce. Perform the steps manually in your org, then store the screenshot alongside your final report.
-
-## Task 2 – MCP Keyword Search Server
-
-The `keyword-search-server` exposes a single MCP tool that scans a text file for a keyword and returns all matches with optional context. The implementation uses the official [`@modelcontextprotocol/sdk`](https://www.npmjs.com/package/@modelcontextprotocol/sdk).
+This repository contains a Python-based Model Context Protocol (MCP) server that fulfils Task 2 of the Ressl assignment. The server exposes a single tool, `search_keyword`, which scans UTF-8 text files for keyword occurrences and returns formatted matches with line numbers.
 
 ### Prerequisites
+- Python 3.10+
+- `pip` (bundled with Python)
 
-- Node.js 20+
-- npm 9+
+### Setup
+- (Recommended) Create and activate a virtual environment inside the repo root.
+- Install dependencies: `pip install -r requirements.txt`
 
-Install project dependencies:
-
+### Run the MCP Server
 ```cmd
-npm install
+python python\keyword_search_mcp_server.py --workspace-root .
 ```
+- The `--workspace-root` flag defaults to the current directory. Override it if you want to restrict searches to a different folder. Alternatively, set the `RESSL_WORKSPACE_ROOT` environment variable before launching the server.
 
-### Available Scripts
+### Tool Reference: `search_keyword`
+- **Parameters**
+	- `file_path` (str): Relative or absolute path to the UTF-8 text file.
+	- `keyword` (str): Search term (required, non-empty).
+	- `case_sensitive` (bool, default `false`): Toggle case-sensitive search.
+	- `max_matches` (int, default `20`): Limit the number of reported matches (min 1).
+- **Output**
+	- Two `text` blocks on success: a summary line and a list of `line_number: context` entries with the first occurrence highlighted as `[match]`.
+	- A single `text` block stating that no matches were found when applicable.
 
-| Command           | Description |
-|-------------------|-------------|
-| `npm run build`   | Type-checks and emits the compiled JavaScript to `dist/`. |
-| `npm run start`   | Runs the compiled server via `node dist/server.js`. Use after `npm run build`. |
-| `npm run dev`     | Starts the server with live TypeScript reloading via `tsx watch`. |
+### Testing with MCP Inspector
+1. Launch the server (see command above).
+2. Open [MCP Inspector](https://github.com/modelcontextprotocol/inspector) and create a connection that targets the running stdio server.
+3. Call the `search_keyword` tool with sample input, e.g.
+	 ```json
+	 {
+		 "file_path": "README.md",
+		 "keyword": "MCP",
+		 "case_sensitive": false,
+		 "max_matches": 5
+	 }
+	 ```
+4. Confirm that the tool response lists the matching lines.
 
-### Running the Server (stdio)
+![MCP Inspector screenshot](docs/mcp-inspector-screenshot.png)
+> Replace `docs/mcp-inspector-screenshot.png` with your captured screenshot that demonstrates the request/response flow in MCP Inspector.
 
-1. Build the project: `npm run build`
-2. Launch the stdio transport server: `npm run start`
-
-This keeps the server listening on stdin/stdout, ready for a client such as MCP Inspector.
-
-### Connecting with MCP Inspector
-
-1. In a separate terminal, install the inspector if you do not already have it:
-   ```cmd
-   npx @modelcontextprotocol/inspector@latest --help
-   ```
-2. With the server running, start the inspector and connect over stdio:
-   ```cmd
-   npx @modelcontextprotocol/inspector@latest --stdio
-   ```
-3. Trigger the `keyword-search` tool with inputs similar to:
-   ```json
-   {
-     "filePath": "README.md",
-     "keyword": "MCP",
-     "caseSensitive": false,
-     "maxMatches": 20,
-     "contextLines": 1
-   }
-   ```
-4. Capture a screenshot showing the inspector input and output for inclusion in your report.
-
-### Sample Output Structure
-
-Tool invocations return a JSON payload:
-
-```json
-{
-  "totalMatches": 2,
-  "matches": [
-    {
-      "lineNumber": 5,
-      "column": 10,
-      "line": "Sample line containing MCP.",
-      "contextBefore": ["Previous line"],
-      "contextAfter": ["Next line"]
-    }
-  ]
-}
-```
-
-The same payload is included as structured content in the MCP response, allowing clients to consume it programmatically.
-
-## Repository Structure
-
-```
-src/server.ts   # MCP server entry point
-README.md       # Assignment documentation (this file)
-```
-
-## Next Steps
-
-- Attach the requested Salesforce screenshot and MCP Inspector screenshot to your deliverable document.
-- Push this project to GitHub and include the repository link in your submission.
+### Repository Link
+- https://github.com/An-Ano-nymus/RESSL-TASK
