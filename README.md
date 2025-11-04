@@ -1,4 +1,4 @@
-## RESSL Task 2 — MCP Server (Python)
+## RESSL Tasks
 
 This repository contains a Python-based Model Context Protocol (MCP) server that fulfils Task 2 of the Ressl assignment. The server exposes a single tool, `search_keyword`, which scans UTF-8 text files for keyword occurrences and returns formatted matches with line numbers.
 
