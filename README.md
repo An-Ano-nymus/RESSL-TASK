@@ -40,8 +40,11 @@ python python\keyword_search_mcp_server.py --workspace-root .
 	 ```
 4. Confirm that the tool response lists the matching lines.
 
-![MCP Inspector screenshot](docs/mcp-inspector-screenshot.png)
-> Replace `docs/mcp-inspector-screenshot.png` with your captured screenshot that demonstrates the request/response flow in MCP Inspector.
+### Screenshots
+- ![Inspector launch](Screenshot%202025-11-02%20235351.png)
+- ![Tool configuration](Screenshot%202025-11-04%20094254.png)
+- ![Tool invocation form](Screenshot%202025-11-04%20094353.png)
+- ![Tool response](Screenshot%202025-11-04%20094402.png)
 
 ### Repository Link
 - https://github.com/An-Ano-nymus/RESSL-TASK
